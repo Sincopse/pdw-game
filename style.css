@@ -1,10 +1,14 @@
-
+@font-face {
+    font-family: 'AmaticSC';
+    src: url('assets/fonts/AmaticSC-Regular.ttf');
+}
 
 * {
     margin: 0;
     padding: 0;
+    border-spacing: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
+    font-family: 'AmaticSC';
 }
 
 @keyframes backgroundScrolling {
@@ -16,30 +20,84 @@
     }
 }
 
+@keyframes walk {
+    0% {
+        height: 3.2rem;
+    }
+    50% {
+        height: 3.5rem;
+    }
+    100% {
+        height: 3.2rem;
+    }
+}
+
 body {
-    background-color: white;
-    /* background-image: url('assets/wallpaper.jpg'); */
+    background-image: url('assets/wallpaper.jpg');
     background-position: center;
     animation: backgroundScrolling 15s linear infinite;
 }
 
-.centered-container {
+.container {
+    position: flex;
+    height: 100vh;
+    margin: auto;
+    justify-content: center;
+}
+
+.timer {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 4rem;
+}
+
+button {
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    background-color: black;
+    color: white;
+    border: 0.2rem solid white;
+}
+
+button:hover {
+    border-color: #00ff00;
+}
+
+.back-btn {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    font-size: 3rem;
+}
+
+.reset-timer {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    font-size: 3rem;
+}
+
+.back-btn:hover {
+    border-color: #00ff00;
+}
+
+.cool-table {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-}
-
-.cool-table {
-    display: none;
     border: none;
-    background-color: rgba(255, 255, 255, .5);
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 .cool-table td {
     text-align: center;
-    width: 200px;
-    height: 200px;
+    min-width: 10rem;
+    height: 10rem;
     border: 1px solid black;
 }
 
@@ -52,20 +110,21 @@ body {
     height: 8rem;
     width: 6rem;
     background-color: red;
-    border: .4rem solid black;
+    border: 0.4rem solid black;
     border-radius: 4.5rem;
-    box-shadow: inset 1rem -1.5rem 0 #65002f;
-    bottom: 1rem;
+    box-shadow: inset 1rem -1.4rem 0 #65002f;
+    bottom: 0.8rem;
     z-index: 10;
+    transform: scale(1, 1);
 }
 
 .funny-character::before {
     content: '';
     position: absolute;
-    left: .4rem;
+    left: 2rem;
     bottom: 0;
-    width: 4rem;
-    height: 1.2rem;
+    width: 1.2rem;
+    height: 1.3rem;
     background-color: #65002f;
 }
 
@@ -76,55 +135,58 @@ body {
     height: 2.5rem;
     width: 4.2rem;
     background-color: lightskyblue;
-    border: .4rem solid #13293a;
+    border: 0.4rem solid #13293a;
     border-radius: 2.5rem;
-    box-shadow: inset 8px -8px 0 #4f7da1;
+    box-shadow: inset 0.5rem -0.5rem 0 #4f7da1;
 }
 
 .funny-character .visor::before {
     content: '';
     position: absolute;
-    top: .2rem;
-    right: .3rem;
-    height: .5rem;
+    top: 0.2rem;
+    right: 0.3rem;
+    height: 0.5rem;
     width: 1.2rem;
     background-color: white;
-    border-radius: .35rem;
+    border-radius: 0.35rem;
 }
 
 .funny-character .backpack {
     position: absolute;
     top: 1rem;
-    left: -2rem;
+    left: -1.9rem;
     height: 5rem;
     width: 2rem;
     background-color: #65002f;
-    border: .4rem solid black;
-    border-radius: 25px 0 0 25px / 25px 0 0 25px;
-    box-shadow: inset 0 15px red;
+    border: 0.4rem solid black;
+    border-radius: 1.5rem 0 0 1.5rem / 1.5rem 0 0 1.5rem;
+    box-shadow: inset 0 0.8rem red;
 }
 
 .funny-character .left-leg {
     position: absolute;
     top: 6rem;
-    height: 3.5rem;
+    height: 3.2rem;
     width: 2.5rem;
     background-color: #65002f;
-    border: .4rem solid black;
+    border: 0.4rem solid black;
     border-top: none;
-    border-radius: 0 0 60px 60px / 0 0 60px 60px;
+    border-radius: 0 0 1.25rem 1.25rem / 0 0 1.25rem 1.25rem;
     z-index: -1;
+    /* animation: walk .6s linear infinite; */
 }
 
 .funny-character .right-leg {
     position: absolute;
     top: 6rem;
     right: 0;
-    height: 3.5rem;
+    height: 3.2rem;
     width: 2.5rem;
     background-color: #65002f;
-    border: .4rem solid black;
+    border: 0.4rem solid black;
     border-top: none;
-    border-radius: 0 0 60px 60px / 0 0 60px 60px;
+    border-radius: 0 0 1.25rem 1.25rem / 0 0 1.25rem 1.25rem;
     z-index: -1;
+    /* animation: walk .6s linear infinite; */
+    animation-delay: 0.3s;
 }
