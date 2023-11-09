@@ -54,6 +54,21 @@ body {
     font-size: 4rem;
 }
 
+.pause-window {
+    position: absolute;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 10vw;
+    color: black;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}
+
 button {
     border: none;
     padding: 0.5rem 1.5rem;
@@ -116,6 +131,7 @@ button:hover {
     bottom: 0.8rem;
     z-index: 10;
     transform: scale(1, 1);
+    transition: transform 0.5s;
 }
 
 .funny-character::before {
@@ -163,7 +179,7 @@ button:hover {
     box-shadow: inset 0 0.8rem red;
 }
 
-.funny-character .left-leg {
+.funny-character #left-leg {
     position: absolute;
     top: 6rem;
     height: 3.2rem;
@@ -176,7 +192,7 @@ button:hover {
     /* animation: walk .6s linear infinite; */
 }
 
-.funny-character .right-leg {
+.funny-character #right-leg {
     position: absolute;
     top: 6rem;
     right: 0;
