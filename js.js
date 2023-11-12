@@ -1,36 +1,43 @@
 const timerDisplay = document.querySelector('.timer')
+const restartBtn = document.querySelector('.reset-timer')
 const pauseWindow = document.querySelector('.pause-window')
 const body = document.querySelector('body')
 let isGameRunning = true
+let isPlayerMoving = false
+let isPlayerFacingLeft = false
+let timer
+let seconds
 
-const togglePauseGame = () => {
+function togglePauseGame() {
     isGameRunning = !isGameRunning
     if (isGameRunning) {
+        startTimer(seconds)
         pauseWindow.style.display = 'none'
         body.style.animationPlayState = 'running'
     } else {
+        clearInterval(timer)
         pauseWindow.style.display = 'flex'
         body.style.animationPlayState = 'paused'
     }
 }
 
-const startTimer = 10
+function startTimer(startingSeconds) {
+    seconds = startingSeconds
+    timerDisplay.textContent = seconds
+    timer = setInterval(function () {
+        seconds--
+        timerDisplay.textContent = seconds
+        if (seconds == 0) {
+            clearInterval(timer)
+            timerDisplay.textContent = "Time's up!"
+        }
+    }, 1000)
+}
 
-let count = startTimer
-timerDisplay.textContent = count
-const timer = setInterval(function () {
-    count--
-    timerDisplay.textContent = count
-    if (count === 0) {
-        clearInterval(timer)
-        timerDisplay.textContent = "Time's up!"
-    }
-}, 1000)
-
-let resetTimer = document.querySelector('.reset-timer')
-resetTimer.addEventListener('click', () => {
-    count = startTimer
-    timerDisplay.textContent = count
+restartBtn.addEventListener('click', () => {
+    clearInterval(timer)
+    startTimer(10)
+    player.resetPlayer()
 })
 
 //? --- Player ---
@@ -42,20 +49,39 @@ const Direction = {
     left: [-1, 0],
 }
 
-class Player {
-    constructor(x, y) {
-        this.html = document.getElementById('player')
-        this.x = x
-        this.y = y
-    }
-    setPosition(direction, step) {
-        if (!this.checkPosition(direction)) return
+let playerStep = 10
 
+class Player {
+    constructor() {
+        this.html = document.getElementById('player')
+        this.x = 0
+        this.y = 0
+    }
+    goTo(direction) {
+        if (!this.checkPosition(direction) || !isGameRunning || isPlayerMoving)
+            return
+
+        isPlayerMoving = true
         /* animation: walk .6s linear infinite; */
         this.x += direction[0]
         this.y += direction[1]
-        this.html.style.transform = `translate(${this.x * step}rem,
-                ${this.y * step}rem)`
+        if (direction == Direction.left) isPlayerFacingLeft = true
+        else if (direction == Direction.right) isPlayerFacingLeft = false
+        this.updatePosition(direction)
+        setTimeout(() => {
+            isPlayerMoving = false
+        }, 100)
+    }
+    updatePosition() {
+        this.html.style.transform = `translate(${this.x * playerStep}rem,
+            ${this.y * playerStep}rem) scale(${isPlayerFacingLeft ? '-1' : '1'}, 1)`
+    }
+    resetPlayer() {
+        isPlayerMoving = false
+        isPlayerFacingLeft = false
+        this.x = 0
+        this.y = 0
+        this.updatePosition()
     }
     checkPosition(direction) {
         return !(
@@ -67,34 +93,26 @@ class Player {
     }
 }
 
-let player = new Player(0, 0)
+let player = new Player()
 
 document.addEventListener('keydown', (event) => {
-    let step = 10
-
     switch (event.key) {
-        case 'w':
-        case 'W':
-        case 'ArrowUp':
-            player.setPosition(Direction.up, step)
+        case 'w': case 'W': case 'ArrowUp':
+            player.goTo(Direction.up)
             break
-        case 'a':
-        case 'A':
-        case 'ArrowLeft':
-            player.setPosition(Direction.left, step)
+        case 'a': case 'A': case 'ArrowLeft':
+            player.goTo(Direction.left)
             break
-        case 's':
-        case 'S':
-        case 'ArrowDown':
-            player.setPosition(Direction.down, step)
+        case 's': case 'S': case 'ArrowDown':
+            player.goTo(Direction.down)
             break
-        case 'd':
-        case 'D':
-        case 'ArrowRight':
-            player.setPosition(Direction.right, step)
+        case 'd': case 'D': case 'ArrowRight':
+            player.goTo(Direction.right)
             break
         case 'Escape':
             togglePauseGame()
             break
     }
 })
+
+startTimer(10)

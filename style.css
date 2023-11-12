@@ -1,6 +1,14 @@
 :root {
-    --player-primary-color:   #c51112;
+    --player-primary-color: #c51112;
     --player-secundary-color: #7a0839;
+    font-size: 0.75rem;
+}
+
+/* For bigger screens*/
+@media screen and (min-height: 55rem) {
+    :root {
+        font-size: 1rem;
+    }
 }
 
 @font-face {
@@ -26,7 +34,7 @@
     }
 }
 
-@keyframes walk {
+/* @keyframes walk {
     0% {
         height: 3.2rem;
     }
@@ -36,7 +44,7 @@
     100% {
         height: 3.2rem;
     }
-}
+} */
 
 body {
     background-image: url('assets/wallpaper.jpg');
@@ -52,12 +60,18 @@ body {
 }
 
 .timer {
-    position: absolute;
-    top: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 0 auto;
     color: white;
     font-size: 4rem;
+}
+
+.points {
+    margin: 1rem auto 0 auto;
+    text-align: center;
+    width: 16rem;
+    font-size: 4rem;
+    font-weight: bold;
+    border-radius: 0.2rem;
 }
 
 .pause-window {
@@ -115,7 +129,7 @@ body {
 
 .wardrobe .funny-character {
     position: absolute;
-    top: 50%;
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -131,12 +145,18 @@ body {
     z-index: -2;
 }
 
+.input-group {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.input-group .button {
+    font-size: 2rem;
+}
+
 .colors {
     float: right;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    align-items: center;
-    justify-items: center;
 }
 
 .colors .color {
@@ -160,7 +180,7 @@ body {
     font-size: 4rem;
 }
 
-.centered-container .button {
+.main-menu .button {
     display: block;
     margin: 2rem auto;
     width: 18rem;
@@ -182,13 +202,15 @@ body {
     border-color: #00ff00;
 }
 
-.cool-table {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: none;
+.acrilic {
     background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+}
+
+.cool-table {
+    border: none;
+    border-radius: 0.5rem;
+    overflow: hidden;
 }
 
 .cool-table td {
@@ -213,7 +235,7 @@ body {
     bottom: 0.8rem;
     z-index: 10;
     transform: scale(1, 1);
-    transition: transform 0.5s;
+    transition: transform 0.2s ease-out;
 }
 
 .funny-character::before {
@@ -261,7 +283,7 @@ body {
     box-shadow: inset 0 0.8rem var(--player-primary-color);
 }
 
-.funny-character #left-leg {
+.funny-character .left-leg {
     position: absolute;
     top: 6rem;
     height: 3.2rem;
@@ -274,7 +296,7 @@ body {
     /* animation: walk .6s linear infinite; */
 }
 
-.funny-character #right-leg {
+.funny-character .right-leg {
     position: absolute;
     top: 6rem;
     right: 0;
