@@ -52,7 +52,7 @@ const AddPoints = (quantity) => {
 
 restartBtn.addEventListener('click', () => {
     clearInterval(timer)
-    startTimer(10)
+    startTimer(20)
     player.reset()
     enemies.forEach((enemy) => {
         enemy.spawn(enemies)
@@ -202,4 +202,4 @@ document.addEventListener('keydown', (event) => {
     }
 })
 
-startTimer(10)
+startTimer(20)
