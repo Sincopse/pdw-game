@@ -47,7 +47,7 @@
 } */
 
 body {
-    background-image: url('assets/wallpaper.jpg');
+    background-image: url('assets/images/wallpaper.jpg');
     background-position: center;
     animation: backgroundScrolling 15s linear infinite;
 }
@@ -60,7 +60,7 @@ body {
 }
 
 .timer {
-    margin: 0 auto;
+    text-align: center;
     color: white;
     font-size: 4rem;
 }
@@ -72,6 +72,16 @@ body {
     font-size: 4rem;
     font-weight: bold;
     border-radius: 0.2rem;
+}
+
+.rotate-character {
+    position: absolute;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.8rem !important;
+    padding: 0 !important;
 }
 
 .pause-window {
@@ -127,13 +137,6 @@ body {
     position: relative;
 }
 
-.wardrobe .funny-character {
-    position: absolute;
-    top: 42%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .funny-character .shadow {
     position: absolute;
     left: -1rem;
@@ -162,7 +165,6 @@ body {
 .colors .color {
     width: 3rem;
     height: 3rem;
-    border: none;
     border: 0.3rem solid black;
     border-radius: 0.4rem;
 }
@@ -214,7 +216,7 @@ body {
 }
 
 .cool-table td {
-    text-align: center;
+    position: relative;
     min-width: 10rem;
     height: 10rem;
     border: 1px solid black;
@@ -225,7 +227,10 @@ body {
 }
 
 .funny-character {
-    position: relative;
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     height: 8rem;
     width: 6rem;
     background-color: var(--player-primary-color);
@@ -233,9 +238,32 @@ body {
     border-radius: 4.5rem;
     box-shadow: inset 1rem -1.4rem 0 var(--player-secundary-color);
     bottom: 0.8rem;
-    z-index: 10;
-    transform: scale(1, 1);
+    z-index: 2;
     transition: transform 0.2s ease-out;
+}
+
+.crewmate {
+    background-color: #d7e0f1;
+    box-shadow: inset 1rem -1.4rem 0 #8394bf;
+    z-index: 1;
+    transition: none;
+}
+
+.crewmate::before {
+    background-color: #8394bf !important;
+}
+
+.crewmate .backpack {
+    background-color: #8394bf !important;
+    box-shadow: inset 0 0.8rem #d7e0f1 !important;
+}
+
+.crewmate .left-leg {
+    background-color: #8394bf !important;
+}
+
+.crewmate .right-leg {
+    background-color: #8394bf !important;
 }
 
 .funny-character::before {

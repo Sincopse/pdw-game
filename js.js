@@ -1,14 +1,23 @@
 const timerDisplay = document.querySelector('.timer')
 const restartBtn = document.querySelector('.reset-timer')
 const pauseWindow = document.querySelector('.pause-window')
+const pointsWindow = document.querySelector('.points')
 const body = document.querySelector('body')
+let killSound = new Audio('assets/sounds/kill.wav')
 let isGameRunning = true
+let hasGameEnded = false
 let isPlayerMoving = false
-let isPlayerFacingLeft = false
 let timer
 let seconds
+let points = 0
 
-function togglePauseGame() {
+const getRandomInt = (max) => {
+    return Math.floor(Math.random() * max);
+}
+
+const togglePauseGame = () => {
+    if (hasGameEnded) return
+
     isGameRunning = !isGameRunning
     if (isGameRunning) {
         startTimer(seconds)
@@ -21,23 +30,37 @@ function togglePauseGame() {
     }
 }
 
-function startTimer(startingSeconds) {
+const startTimer = (startingSeconds) => {
     seconds = startingSeconds
     timerDisplay.textContent = seconds
     timer = setInterval(function () {
         seconds--
         timerDisplay.textContent = seconds
-        if (seconds == 0) {
+        if (seconds <= 0) {
             clearInterval(timer)
             timerDisplay.textContent = "Time's up!"
+            isGameRunning = false
+            hasGameEnded = true
         }
     }, 1000)
+}
+
+const AddPoints = (quantity) => {
+    points += quantity
+    pointsWindow.textContent = 'Points: ' + points
 }
 
 restartBtn.addEventListener('click', () => {
     clearInterval(timer)
     startTimer(10)
-    player.resetPlayer()
+    player.reset()
+    enemies.forEach((enemy) => {
+        enemy.spawn(enemies)
+    });
+    points = 0
+    pointsWindow.textContent = 'Points: 0'
+    isGameRunning = true
+    hasGameEnded = false
 })
 
 //? --- Player ---
@@ -49,36 +72,46 @@ const Direction = {
     left: [-1, 0],
 }
 
-let playerStep = 10
+let movementStep = 10
 
 class Player {
     constructor() {
         this.html = document.getElementById('player')
         this.x = 0
         this.y = 0
+        this.isFacingLeft = false
     }
     goTo(direction) {
         if (!this.checkPosition(direction) || !isGameRunning || isPlayerMoving)
             return
 
+        // Prevent player from spamming inputs
         isPlayerMoving = true
-        /* animation: walk .6s linear infinite; */
-        this.x += direction[0]
-        this.y += direction[1]
-        if (direction == Direction.left) isPlayerFacingLeft = true
-        else if (direction == Direction.right) isPlayerFacingLeft = false
-        this.updatePosition(direction)
         setTimeout(() => {
             isPlayerMoving = false
         }, 100)
+
+        this.x += direction[0]
+        this.y += direction[1]
+        if (direction == Direction.left) this.isFacingLeft = true
+        else if (direction == Direction.right) this.isFacingLeft = false
+        this.updatePosition(direction)
+        this.checkColision()
+    }
+    kill(crewmate) {
+        killSound.cloneNode(true).play()
+        AddPoints(10)
+        crewmate.spawn()
     }
     updatePosition() {
-        this.html.style.transform = `translate(${this.x * playerStep}rem,
-            ${this.y * playerStep}rem) scale(${isPlayerFacingLeft ? '-1' : '1'}, 1)`
+        this.html.style.transform = `translate(calc(${this.x * movementStep}rem - 50%),
+            calc(${this.y * movementStep}rem - 50%)) scale(${
+            this.isFacingLeft ? '-1' : '1'
+        }, 1)`
     }
-    resetPlayer() {
+    reset() {
         isPlayerMoving = false
-        isPlayerFacingLeft = false
+        this.isFacingLeft = false
         this.x = 0
         this.y = 0
         this.updatePosition()
@@ -91,9 +124,63 @@ class Player {
             this.y + direction[1] > 2
         )
     }
+    checkColision() {
+        enemies.forEach((enemy) => {
+            if (enemy.x == this.x && enemy.y == this.y)
+                this.kill(enemy)
+        })
+    }
 }
 
 let player = new Player()
+
+class Crewmate {
+    constructor(id) {
+        this.html = document.getElementById('crewmate' + id)
+        this.x = 0
+        this.y = 0
+        this.isFacingLeft = false
+    }
+    spawn() {
+        let positionOccupied
+        do {
+            positionOccupied = false
+            this.x = getRandomInt(3)
+            this.y = getRandomInt(3)
+            if (player.x == this.x && player.y == this.y) {
+                positionOccupied = true
+            }
+            enemies.forEach((enemy) => {
+                if(enemy != this)
+                    if (enemy.x == this.x && enemy.y == this.y)
+                        positionOccupied = true
+            })
+        } while (positionOccupied)
+        this.isFacingLeft = getRandomInt(2) == 1 ? true : false
+
+        this.updatePosition()
+    }
+    updatePosition() {
+        this.html.style.transform = `translate(calc(${this.x * movementStep}rem - 50%),
+            calc(${this.y * movementStep}rem - 50%)) scale(${
+            this.isFacingLeft ? '-1' : '1'
+        }, 1)`
+    }
+    reset() {
+        this.isFacingLeft = false
+        this.x = -1
+        this.y = -1
+        this.updatePosition()
+    }
+}
+
+let enemies = [
+    new Crewmate(0)
+]
+
+enemies.forEach((enemy) => {
+    enemy.spawn()
+});
 
 document.addEventListener('keydown', (event) => {
     switch (event.key) {

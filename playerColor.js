@@ -10,7 +10,7 @@ const Colors = {
 let root = document.querySelector(':root')
 let currentColor = localStorage.getItem('color')
 
-let updatePlayerColor = (color) => {
+const updatePlayerColor = (color) => {
     if (color in Colors) {
         currentColor = color
         root.style.setProperty('--player-primary-color', Colors[color][0])
@@ -20,14 +20,4 @@ let updatePlayerColor = (color) => {
 
 if (currentColor != null) {
     updatePlayerColor(currentColor)
-}
-
-document.addEventListener('click', (event) => {
-    updatePlayerColor(event.target.id)
-})
-
-document.onsubmit = (event) => {
-    localStorage.setItem('color', currentColor)
-    event.preventDefault();
-    window.location.href = 'index.html'
 }
