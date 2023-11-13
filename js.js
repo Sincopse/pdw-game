@@ -202,4 +202,4 @@ document.addEventListener('keydown', (event) => {
     }
 })
 
-startTimer(10)
+startTimer(20)
