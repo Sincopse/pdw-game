@@ -4,6 +4,7 @@ const pauseWindow = document.querySelector('.pause-window')
 const pointsWindow = document.querySelector('.points')
 const body = document.querySelector('body')
 let killSound = new Audio('assets/sounds/kill.wav')
+let emergencySound = new Audio('assets/sounds/emergency.wav')
 let isGameRunning = true
 let hasGameEnded = false
 let isPlayerMoving = false
@@ -30,18 +31,24 @@ const togglePauseGame = () => {
     }
 }
 
+const endGame = () => {
+    clearInterval(timer)
+    timerDisplay.textContent = "Time's up!"
+    timerDisplay.style.color = 'red'
+    isGameRunning = false
+    hasGameEnded = true
+    emergencySound.play()
+}
+
 const startTimer = (startingSeconds) => {
     seconds = startingSeconds
     timerDisplay.textContent = seconds
+    timerDisplay.style.color = 'white'
     timer = setInterval(function () {
         seconds--
         timerDisplay.textContent = seconds
-        if (seconds <= 0) {
-            clearInterval(timer)
-            timerDisplay.textContent = "Time's up!"
-            isGameRunning = false
-            hasGameEnded = true
-        }
+        timerDisplay.style.color = (seconds % 2 == 0) ? 'white' : 'red'
+        if (seconds <= 0) endGame()
     }, 1000)
 }
 
