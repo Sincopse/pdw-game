@@ -81,13 +81,34 @@ const Direction = {
 
 let movementStep = 10
 
-class Player {
-    constructor() {
-        this.html = document.getElementById('player')
+class Crewmate {
+    constructor(objectId) {
+        this.html = document.getElementById(objectId)
         this.x = 0
         this.y = 0
         this.isFacingLeft = false
     }
+    updatePosition() {
+        this.html.style.transform = `translate(calc(${this.x * movementStep}rem - 50%),
+            calc(${this.y * movementStep}rem - 50%)) scale(${
+            this.isFacingLeft ? '-1' : '1'
+        }, 1)`
+    }
+    reset() {
+        this.isFacingLeft = false
+        this.updatePosition()
+    }
+    checkPosition(direction) {
+        return !(
+            this.x + direction[0] < 0 ||
+            this.x + direction[0] > 2 ||
+            this.y + direction[1] < 0 ||
+            this.y + direction[1] > 2
+        )
+    }
+}
+
+class Player extends Crewmate {
     goTo(direction) {
         if (!this.checkPosition(direction) || !isGameRunning || isPlayerMoving)
             return
@@ -110,18 +131,11 @@ class Player {
         AddPoints(10)
         crewmate.spawn()
     }
-    updatePosition() {
-        this.html.style.transform = `translate(calc(${this.x * movementStep}rem - 50%),
-            calc(${this.y * movementStep}rem - 50%)) scale(${
-            this.isFacingLeft ? '-1' : '1'
-        }, 1)`
-    }
     reset() {
         isPlayerMoving = false
-        this.isFacingLeft = false
         this.x = 0
         this.y = 0
-        this.updatePosition()
+        super.reset()
     }
     checkPosition(direction) {
         return !(
@@ -139,15 +153,7 @@ class Player {
     }
 }
 
-let player = new Player()
-
-class Crewmate {
-    constructor(id) {
-        this.html = document.getElementById('crewmate' + id)
-        this.x = 0
-        this.y = 0
-        this.isFacingLeft = false
-    }
+class Enemy extends Crewmate {
     spawn() {
         let positionOccupied
         do {
@@ -167,22 +173,17 @@ class Crewmate {
 
         this.updatePosition()
     }
-    updatePosition() {
-        this.html.style.transform = `translate(calc(${this.x * movementStep}rem - 50%),
-            calc(${this.y * movementStep}rem - 50%)) scale(${
-            this.isFacingLeft ? '-1' : '1'
-        }, 1)`
-    }
     reset() {
-        this.isFacingLeft = false
         this.x = -1
         this.y = -1
-        this.updatePosition()
+        super.reset()
     }
 }
 
+let player = new Player('player')
+
 let enemies = [
-    new Crewmate(0)
+    new Enemy('crewmate0')
 ]
 
 enemies.forEach((enemy) => {
